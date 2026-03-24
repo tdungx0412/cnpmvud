@@ -3,30 +3,28 @@ import React from "react";
 class Finance extends React.Component {
   render() {
     return (
-      <div className="grid">
-        <div className="card">
-          <h3>Chi phí theo Container</h3>
-          <table id="tblFinance">
-            <thead>
-              <tr>
-                <th>Container</th>
-                <th>Cước chính</th>
-                <th>DEM/DET</th>
-                <th>Local charge</th>
-                <th>Phí khác</th>
-                <th>Tổng</th>
-                <th>Hành động</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td colSpan={7} style={{ textAlign: "center", color: "#94a3b8" }}>
-                  Chưa có dữ liệu chi phí
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
+      <div>
+        <h2>Chi phí theo Container</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Container</th>
+              <th>Cước chính</th>
+              <th>DEM/DET</th>
+              <th>Local charge</th>
+              <th>Phí khác</th>
+              <th>Tổng</th>
+              <th>Hành động</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td colSpan={7} style={{ textAlign: "center", color: "#94a3b8" }}>
+                Chưa có dữ liệu chi phí
+              </td>
+            </tr>
+          </tbody>
+        </table>
 
         <div className="card">
           <h3>Tính toán chi phí</h3>

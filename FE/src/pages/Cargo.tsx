@@ -3,29 +3,27 @@ import React from "react";
 class Cargo extends React.Component {
   render() {
     return (
-      <div className="grid">
-        <div className="card">
-          <h3>Danh sách Lô hàng</h3>
-          <table id="tblCargo">
-            <thead>
-              <tr>
-                <th>#</th>
-                <th>Mô tả</th>
-                <th>Container</th>
-                <th>Trọng lượng</th>
-                <th>Loại</th>
-                <th>Hành động</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td colSpan={6} style={{ textAlign: "center", color: "#94a3b8" }}>
-                  Chưa có lô hàng
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
+      <div>
+        <h2>Danh sách Lô hàng</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Mô tả</th>
+              <th>Container</th>
+              <th>Trọng lượng</th>
+              <th>Loại</th>
+              <th>Hành động</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td colSpan={6} style={{ textAlign: "center", color: "#94a3b8" }}>
+                Chưa có lô hàng
+              </td>
+            </tr>
+          </tbody>
+        </table>
 
         <div className="card">
           <h3>Thêm / Sửa Lô hàng</h3>

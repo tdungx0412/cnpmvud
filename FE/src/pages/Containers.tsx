@@ -3,29 +3,27 @@ import React from "react";
 class Containers extends React.Component {
   render() {
     return (
-      <div className="grid">
-        <div className="card">
-          <h3>Danh sách Container</h3>
-          <table id="tblContainers">
-            <thead>
-              <tr>
-                <th>#</th>
-                <th>Số</th>
-                <th>Loại</th>
-                <th>Vị trí</th>
-                <th>Trạng thái</th>
-                <th>Hành động</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td colSpan={6} style={{ textAlign: "center", color: "#94a3b8" }}>
-                  Chưa có container
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
+      <div>
+        <h2>Danh sách Container</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Số</th>
+              <th>Loại</th>
+              <th>Vị trí</th>
+              <th>Trạng thái</th>
+              <th>Hành động</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td colSpan={6} style={{ textAlign: "center", color: "#94a3b8" }}>
+                Chưa có container
+              </td>
+            </tr>
+          </tbody>
+        </table>
 
         <div className="card">
           <h3>Thêm / Sửa Container</h3>

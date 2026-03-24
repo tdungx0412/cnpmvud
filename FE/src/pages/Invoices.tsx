@@ -3,37 +3,37 @@ import React from "react";
 class Invoices extends React.Component {
   render() {
     return (
-      <div className="grid">
-        <div className="card">
-          <h3>Hóa đơn</h3>
-          <table id="tblInvoices">
-            <thead>
-              <tr>
-                <th>STT</th>
-                <th>Số HĐơn</th>
-                <th>Hợp đồng</th>
-                <th>Container</th>
-                <th>Đối tác</th>
-                <th>Ngày xuất</th>
-                <th>Hạn TT</th>
-                <th>Tổng tiền</th>
-                <th>Trạng thái</th>
-                <th>Thao tác</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td colSpan={10} style={{ textAlign: "center", color: "#94a3b8" }}>
-                  Chưa có hóa đơn
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
+      <div>
+        <h2>Hóa đơn</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>STT</th>
+              <th>Số HĐơn</th>
+              <th>Hợp đồng</th>
+              <th>Container</th>
+              <th>Đối tác</th>
+              <th>Ngày xuất</th>
+              <th>Hạn TT</th>
+              <th>Tổng tiền</th>
+              <th>Trạng thái</th>
+              <th>Thao tác</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td colSpan={10} style={{ textAlign: "center", color: "#94a3b8" }}>
+                Chưa có hóa đơn
+              </td>
+            </tr>
+          </tbody>
+        </table>
 
         <div className="card">
           <h3 id="invoiceFormTitle">Thêm hóa đơn</h3>
-          <div className="form-row"><input id="iNo" placeholder="Số hóa đơn" /></div>
+          <div className="form-row">
+            <input id="iNo" placeholder="Số hóa đơn" />
+          </div>
           <div className="form-row">
             <select id="iContract">
               <option value="" disabled selected>Chọn hợp đồng</option>
@@ -44,14 +44,18 @@ class Invoices extends React.Component {
               <option value="">Chọn container</option>
             </select>
           </div>
-          <div className="form-row"><input id="iPartner" placeholder="Đối tác" disabled /></div>
+          <div className="form-row">
+            <input id="iPartner" placeholder="Đối tác" disabled />
+          </div>
 
           <div className="form-row form-row-2">
             <input id="iIssue" type="date" />
             <input id="iDue" type="date" />
           </div>
 
-          <div className="form-row"><input id="iAmount" type="number" placeholder="Tiền hàng (VNĐ)" /></div>
+          <div className="form-row">
+            <input id="iAmount" type="number" placeholder="Tiền hàng (VNĐ)" />
+          </div>
 
           <div className="form-row form-row-2">
             <input id="iVat" type="number" placeholder="VAT (%)" />

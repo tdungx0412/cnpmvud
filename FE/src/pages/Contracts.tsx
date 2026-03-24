@@ -3,35 +3,37 @@ import React from "react";
 class Contracts extends React.Component {
   render() {
     return (
-      <div className="grid">
-        <div className="card">
-          <h3>Hợp đồng</h3>
-          <table id="tblContracts">
-            <thead>
-              <tr>
-                <th>STT</th>
-                <th>Số HĐ</th>
-                <th>Đối tác</th>
-                <th>Hiệu lực</th>
-                <th>Giá trị</th>
-                <th>Trạng thái</th>
-                <th>Thao tác</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td colSpan={7} style={{ textAlign: "center", color: "#94a3b8" }}>
-                  Chưa có hợp đồng
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
+      <div>
+        <h2>Hợp đồng</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>STT</th>
+              <th>Số HĐ</th>
+              <th>Đối tác</th>
+              <th>Hiệu lực</th>
+              <th>Giá trị</th>
+              <th>Trạng thái</th>
+              <th>Thao tác</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td colSpan={7} style={{ textAlign: "center", color: "#94a3b8" }}>
+                Chưa có hợp đồng
+              </td>
+            </tr>
+          </tbody>
+        </table>
 
         <div className="card">
           <h3 id="contractFormTitle">Thêm hợp đồng</h3>
-          <div className="form-row"><input id="cNo" placeholder="Số hợp đồng" /></div>
-          <div className="form-row"><input id="cPartner" placeholder="Khách hàng / Đối tác" /></div>
+          <div className="form-row">
+            <input id="cNo" placeholder="Số hợp đồng" />
+          </div>
+          <div className="form-row">
+            <input id="cPartner" placeholder="Khách hàng / Đối tác" />
+          </div>
           <div className="form-row form-row-2">
             <input id="cStart" type="date" />
             <input id="cEnd" type="date" />
