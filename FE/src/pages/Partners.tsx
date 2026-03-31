@@ -9,27 +9,17 @@ interface Partner {
   Status: string;
 }
 
-interface PartnersState {
+interface State {
   partners: Partner[];
   loading: boolean;
-  formData: {
-    name: string;
-    type: string;
-    contact: string;
-    status: string;
-  };
+  formData: { name: string; type: string; contact: string; status: string };
 }
 
-class Partners extends React.Component<{}, PartnersState> {
-  state: PartnersState = {
+class Partners extends React.Component<{}, State> {
+  state: State = {
     partners: [],
     loading: false,
-    formData: {
-      name: "",
-      type: "sender",
-      contact: "",
-      status: "active"
-    }
+    formData: { name: "", type: "sender", contact: "", status: "active" }
   };
 
   componentDidMount() {
@@ -40,24 +30,20 @@ class Partners extends React.Component<{}, PartnersState> {
     try {
       this.setState({ loading: true });
       const response = await api.get('/partners');
+      console.log('Partners response:', response);
       this.setState({ 
-        partners: response.data.data || [],
+        partners: response.data?.data || [],
         loading: false 
       });
     } catch (error) {
-      console.error('Error fetching partners:', error);
+      console.error('Error:', error);
       this.setState({ loading: false });
     }
   };
 
   handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
-    this.setState({
-      formData: {
-        ...this.state.formData,
-        [name]: value
-      }
-    });
+    this.setState({ formData: { ...this.state.formData, [name]: value } });
   };
 
   handleSubmit = async (e: React.FormEvent) => {
@@ -67,14 +53,12 @@ class Partners extends React.Component<{}, PartnersState> {
       this.resetForm();
       this.fetchPartners();
     } catch (error) {
-      console.error('Error saving partner:', error);
+      alert('Có lỗi xảy ra!');
     }
   };
 
   resetForm = () => {
-    this.setState({
-      formData: { name: "", type: "sender", contact: "", status: "active" }
-    });
+    this.setState({ formData: { name: "", type: "sender", contact: "", status: "active" } });
   };
 
   getTypeText = (type: string): string => {
@@ -93,26 +77,14 @@ class Partners extends React.Component<{}, PartnersState> {
     return (
       <div>
         <h2>Danh sách Đối tác / Khách hàng</h2>
-        {loading ? (
-          <p>Đang tải...</p>
-        ) : (
+        {loading ? <p>Đang tải...</p> : (
           <table>
             <thead>
-              <tr>
-                <th>STT</th>
-                <th>Tên</th>
-                <th>Loại</th>
-                <th>Liên hệ</th>
-                <th>Trạng thái</th>
-              </tr>
+              <tr><th>STT</th><th>Tên</th><th>Loại</th><th>Liên hệ</th><th>Trạng thái</th></tr>
             </thead>
             <tbody>
               {partners.length === 0 ? (
-                <tr>
-                  <td colSpan={5} style={{ textAlign: "center", color: "#94a3b8" }}>
-                    Chưa có đối tác / khách hàng
-                  </td>
-                </tr>
+                <tr><td colSpan={5} style={{ textAlign: "center", color: "#94a3b8" }}>Chưa có đối tác</td></tr>
               ) : (
                 partners.map((p, index) => (
                   <tr key={p.Id}>
@@ -132,13 +104,7 @@ class Partners extends React.Component<{}, PartnersState> {
           <h3>Thêm Đối tác</h3>
           <form onSubmit={this.handleSubmit}>
             <div className="form-row">
-              <input
-                name="name"
-                placeholder="Tên"
-                value={formData.name}
-                onChange={this.handleInputChange}
-                required
-              />
+              <input name="name" placeholder="Tên" value={formData.name} onChange={this.handleInputChange} required />
             </div>
             <div className="form-row">
               <select name="type" value={formData.type} onChange={this.handleInputChange}>
@@ -149,13 +115,7 @@ class Partners extends React.Component<{}, PartnersState> {
               </select>
             </div>
             <div className="form-row">
-              <input
-                name="contact"
-                placeholder="SĐT / Email"
-                value={formData.contact}
-                onChange={this.handleInputChange}
-                required
-              />
+              <input name="contact" placeholder="SĐT / Email" value={formData.contact} onChange={this.handleInputChange} required />
             </div>
             <div className="form-row">
               <select name="status" value={formData.status} onChange={this.handleInputChange}>

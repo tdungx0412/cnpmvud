@@ -1,15 +1,17 @@
 import React from "react";
+import api from "../services/api";
 
-interface CargoItem {
-  id: string;
-  description: string;
-  weight: string;
-  type: string;
-  containerId: string;
+interface Cargo {
+  Id: string;
+  Description: string;
+  Weight: number;
+  Type: string;
+  ContainerId: string;
 }
 
-interface CargoState {
-  cargos: CargoItem[];
+interface State {
+  cargos: Cargo[];
+  loading: boolean;
   formData: {
     description: string;
     weight: string;
@@ -18,134 +20,115 @@ interface CargoState {
   };
 }
 
-class Cargo extends React.Component<{}, CargoState> {
-  state: CargoState = {
+class Cargo extends React.Component<{}, State> {
+  state: State = {
     cargos: [],
-    formData: {
-      description: "",
-      weight: "",
-      type: "General",
-      containerId: ""
+    loading: false,
+    formData: { description: "", weight: "", type: "General", containerId: "" }
+  };
+
+  componentDidMount() {
+    this.fetchCargos();
+  }
+
+  fetchCargos = async () => {
+    try {
+      this.setState({ loading: true });
+      const response = await api.get('/cargo');
+      console.log('Cargo response:', response);
+      this.setState({ 
+        cargos: response.data?.data || [],
+        loading: false 
+      });
+    } catch (error) {
+      console.error('Error:', error);
+      this.setState({ loading: false });
     }
   };
 
   handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
-    this.setState({
-      formData: {
-        ...this.state.formData,
-        [name]: value
-      }
-    });
+    this.setState({ formData: { ...this.state.formData, [name]: value } });
   };
 
-  handleSubmit = (e: React.FormEvent) => {
+  handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const newCargo: CargoItem = {
-      id: Date.now().toString(),
-      ...this.state.formData
-    };
-    this.setState({
-      cargos: [...this.state.cargos, newCargo],
-      formData: { description: "", weight: "", type: "General", containerId: "" }
-    });
-  };
-
-  handleDelete = (id: string) => {
-    if (window.confirm("Bạn có chắc muốn xóa lô hàng này?")) {
-      this.setState({
-        cargos: this.state.cargos.filter(c => c.id !== id)
+    try {
+      await api.post('/cargo', {
+        ...this.state.formData,
+        weight: parseFloat(this.state.formData.weight)
       });
+      this.resetForm();
+      this.fetchCargos();
+    } catch (error) {
+      alert('Có lỗi xảy ra!');
     }
   };
 
+  resetForm = () => {
+    this.setState({ formData: { description: "", weight: "", type: "General", containerId: "" } });
+  };
+
+  getTypeText = (type: string): string => {
+    const map: Record<string, string> = {
+      General: 'Hàng thường',
+      Reefer: 'Hàng lạnh',
+      Dangerous: 'Hàng nguy hiểm'
+    };
+    return map[type] || type;
+  };
+
   render() {
-    const { cargos, formData } = this.state;
+    const { cargos, loading, formData } = this.state;
 
     return (
       <div>
         <h2>Danh sách Lô hàng</h2>
-        <table>
-          <thead>
-            <tr>
-              <th>#</th>
-              <th>Mô tả</th>
-              <th>Container</th>
-              <th>Trọng lượng</th>
-              <th>Loại</th>
-              <th>Hành động</th>
-            </tr>
-          </thead>
-          <tbody>
-            {cargos.length === 0 ? (
-              <tr>
-                <td colSpan={6} style={{ textAlign: "center", color: "#94a3b8" }}>
-                  Chưa có lô hàng
-                </td>
-              </tr>
-            ) : (
-              cargos.map((c, index) => (
-                <tr key={c.id}>
-                  <td>{index + 1}</td>
-                  <td>{c.description}</td>
-                  <td>{c.containerId || "N/A"}</td>
-                  <td>{c.weight} kg</td>
-                  <td>{c.type}</td>
-                  <td>
-                    <button className="btn btn-delete" onClick={() => this.handleDelete(c.id)}>Xóa</button>
-                  </td>
-                </tr>
-              ))
-            )}
-          </tbody>
-        </table>
+        {loading ? <p>Đang tải...</p> : (
+          <table>
+            <thead>
+              <tr><th>STT</th><th>Mô tả</th><th>Container</th><th>Trọng lượng</th><th>Loại</th><th>Hành động</th></tr>
+            </thead>
+            <tbody>
+              {cargos.length === 0 ? (
+                <tr><td colSpan={6} style={{ textAlign: "center", color: "#94a3b8" }}>Chưa có lô hàng</td></tr>
+              ) : (
+                cargos.map((c, index) => (
+                  <tr key={c.Id}>
+                    <td>{index + 1}</td>
+                    <td>{c.Description}</td>
+                    <td>{c.ContainerId}</td>
+                    <td>{c.Weight} kg</td>
+                    <td>{this.getTypeText(c.Type)}</td>
+                    <td>
+                      <button className="btn btn-edit">Sửa</button>
+                      <button className="btn btn-delete">Xóa</button>
+                    </td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
+        )}
 
         <div className="card">
           <h3>Thêm Lô hàng</h3>
           <form onSubmit={this.handleSubmit}>
             <div className="form-row">
-              <input
-                name="description"
-                placeholder="Mô tả hàng"
-                value={formData.description}
-                onChange={this.handleInputChange}
-                required
-              />
+              <input name="description" placeholder="Mô tả hàng" value={formData.description} onChange={this.handleInputChange} required />
             </div>
             <div className="form-row">
-              <input
-                name="weight"
-                type="number"
-                placeholder="Trọng lượng (kg)"
-                value={formData.weight}
-                onChange={this.handleInputChange}
-                required
-              />
+              <input name="weight" type="number" placeholder="Trọng lượng (kg)" value={formData.weight} onChange={this.handleInputChange} required />
             </div>
             <div className="form-row">
               <select name="type" value={formData.type} onChange={this.handleInputChange}>
-                <option>General</option>
-                <option>Reefer</option>
-                <option>Dangerous (DG)</option>
+                <option>General</option><option>Reefer</option><option>Dangerous</option>
               </select>
             </div>
             <div className="form-row">
-              <select
-                name="containerId"
-                value={formData.containerId}
-                onChange={this.handleInputChange}
-              >
-                <option value="">- Chọn container -</option>
-                <option value="MSCU1234567">MSCU1234567</option>
-                <option value="TGHU9876543">TGHU9876543</option>
-              </select>
+              <input name="containerId" placeholder="Container ID" value={formData.containerId} onChange={this.handleInputChange} />
             </div>
-            <div style={{ display: "flex", gap: "8px" }}>
-              <button type="submit" className="btn">Lưu</button>
-              <button type="button" className="btn" style={{ background: "#6b7280" }} onClick={() => this.setState({ formData: { description: "", weight: "", type: "General", containerId: "" } })}>
-                Hủy
-              </button>
-            </div>
+            <button type="submit" className="btn">Lưu</button>
           </form>
         </div>
       </div>

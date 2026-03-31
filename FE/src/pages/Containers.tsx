@@ -9,7 +9,7 @@ interface Container {
   Status: string;
 }
 
-interface ContainersState {
+interface State {
   containers: Container[];
   loading: boolean;
   formData: {
@@ -21,16 +21,11 @@ interface ContainersState {
   editingId: string | null;
 }
 
-class Containers extends React.Component<{}, ContainersState> {
-  state: ContainersState = {
+class Containers extends React.Component<{}, State> {
+  state: State = {
     containers: [],
     loading: false,
-    formData: {
-      number: "",
-      type: "20DC",
-      location: "",
-      status: "empty"
-    },
+    formData: { number: "", type: "20DC", location: "", status: "empty" },
     editingId: null
   };
 
@@ -42,24 +37,20 @@ class Containers extends React.Component<{}, ContainersState> {
     try {
       this.setState({ loading: true });
       const response = await api.get('/containers');
+      console.log('Containers response:', response);
       this.setState({ 
-        containers: response.data.data || [],
+        containers: response.data?.data || [],
         loading: false 
       });
     } catch (error) {
-      console.error('Error fetching containers:', error);
+      console.error('Error:', error);
       this.setState({ loading: false });
     }
   };
 
   handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
-    this.setState({
-      formData: {
-        ...this.state.formData,
-        [name]: value
-      }
-    });
+    this.setState({ formData: { ...this.state.formData, [name]: value } });
   };
 
   handleSubmit = async (e: React.FormEvent) => {
@@ -73,7 +64,8 @@ class Containers extends React.Component<{}, ContainersState> {
       this.resetForm();
       this.fetchContainers();
     } catch (error) {
-      console.error('Error saving container:', error);
+      console.error('Error saving:', error);
+      alert('Có lỗi xảy ra!');
     }
   };
 
@@ -90,12 +82,12 @@ class Containers extends React.Component<{}, ContainersState> {
   };
 
   handleDelete = async (id: string) => {
-    if (window.confirm("Bạn có chắc muốn xóa container này?")) {
+    if (window.confirm("Xóa container này?")) {
       try {
         await api.delete(`/containers/${id}`);
         this.fetchContainers();
       } catch (error) {
-        console.error('Error deleting container:', error);
+        alert('Có lỗi xảy ra!');
       }
     }
   };
@@ -123,27 +115,16 @@ class Containers extends React.Component<{}, ContainersState> {
     return (
       <div>
         <h2>Danh sách Container</h2>
-        {loading ? (
-          <p>Đang tải...</p>
-        ) : (
+        {loading ? <p>Đang tải...</p> : (
           <table>
             <thead>
               <tr>
-                <th>#</th>
-                <th>Số</th>
-                <th>Loại</th>
-                <th>Vị trí</th>
-                <th>Trạng thái</th>
-                <th>Hành động</th>
+                <th>#</th><th>Số</th><th>Loại</th><th>Vị trí</th><th>Trạng thái</th><th>Hành động</th>
               </tr>
             </thead>
             <tbody>
               {containers.length === 0 ? (
-                <tr>
-                  <td colSpan={6} style={{ textAlign: "center", color: "#94a3b8" }}>
-                    Chưa có container
-                  </td>
-                </tr>
+                <tr><td colSpan={6} style={{ textAlign: "center", color: "#94a3b8" }}>Chưa có container</td></tr>
               ) : (
                 containers.map((c, index) => (
                   <tr key={c.Id}>
@@ -167,45 +148,24 @@ class Containers extends React.Component<{}, ContainersState> {
           <h3>{editingId ? "Sửa Container" : "Thêm Container"}</h3>
           <form onSubmit={this.handleSubmit}>
             <div className="form-row">
-              <input
-                name="number"
-                placeholder="Container No"
-                value={formData.number}
-                onChange={this.handleInputChange}
-                required
-              />
+              <input name="number" placeholder="Container No" value={formData.number} onChange={this.handleInputChange} required />
             </div>
             <div className="form-row">
               <select name="type" value={formData.type} onChange={this.handleInputChange}>
-                <option>20DC</option>
-                <option>40HC</option>
-                <option>REEFER</option>
-                <option>OPEN_TOP</option>
+                <option>20DC</option><option>40HC</option><option>REEFER</option><option>OPEN_TOP</option>
               </select>
             </div>
             <div className="form-row">
-              <input
-                name="location"
-                placeholder="Vị trí (Depot / Port / Onboard)"
-                value={formData.location}
-                onChange={this.handleInputChange}
-              />
+              <input name="location" placeholder="Vị trí" value={formData.location} onChange={this.handleInputChange} />
             </div>
             <div className="form-row">
               <select name="status" value={formData.status} onChange={this.handleInputChange}>
-                <option value="empty">Rỗng</option>
-                <option value="loaded">Đầy hàng</option>
-                <option value="in_transit">Đang vận chuyển</option>
-                <option value="maintenance">Bảo trì</option>
+                <option value="empty">Rỗng</option><option value="loaded">Đầy hàng</option><option value="in_transit">Đang vận chuyển</option><option value="maintenance">Bảo trì</option>
               </select>
             </div>
             <div style={{ display: "flex", gap: "8px" }}>
               <button type="submit" className="btn">{editingId ? "Cập nhật" : "Lưu"}</button>
-              {editingId && (
-                <button type="button" className="btn" style={{ background: "#6b7280" }} onClick={this.resetForm}>
-                  Hủy
-                </button>
-              )}
+              {editingId && <button type="button" className="btn" style={{ background: "#6b7280" }} onClick={this.resetForm}>Hủy</button>}
             </div>
           </form>
         </div>

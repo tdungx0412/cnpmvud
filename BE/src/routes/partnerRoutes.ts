@@ -1,6 +1,7 @@
 import express from 'express';
 import {
   getPartners,
+  getPartnerById,
   createPartner,
   updatePartner,
   deletePartner
@@ -13,6 +14,7 @@ router.route('/')
   .post(createPartner);
 
 router.route('/:id')
+  .get(getPartnerById)
   .put(updatePartner)
   .delete(deletePartner);
 

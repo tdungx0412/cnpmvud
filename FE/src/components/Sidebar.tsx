@@ -13,7 +13,13 @@ interface MenuItem {
 const menuItems: MenuItem[] = [
   { id: "dashboard", label: "Tổng quan" },
   { id: "containers", label: "Quản lý Container" },
+  { id: "cargo", label: "Hàng trong Container" },
+  { id: "transport", label: "Vận tải" },
+  { id: "finance", label: "Tài chính & Chi phí" },
+  { id: "contracts", label: "Hợp đồng" },
+  { id: "invoices", label: "Hóa đơn" },
   { id: "partners", label: "Khách hàng & Đối tác" },
+  { id: "staff", label: "Nhân sự" },
 ];
 
 class Sidebar extends React.Component<Props> {
