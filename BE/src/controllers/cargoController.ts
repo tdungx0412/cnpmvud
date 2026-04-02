@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import { poolPromise } from '../config/database';
 
+
 export const getCargos = async (req: Request, res: Response): Promise<void> => {
   try {
     const pool = await poolPromise;
@@ -11,6 +12,7 @@ export const getCargos = async (req: Request, res: Response): Promise<void> => {
     res.status(500).json({ success: false, message: 'Server error' });
   }
 };
+
 
 export const getCargoById = async (req: Request, res: Response): Promise<void> => {
   try {
@@ -32,13 +34,16 @@ export const getCargoById = async (req: Request, res: Response): Promise<void> =
 export const createCargo = async (req: Request, res: Response): Promise<void> => {
   try {
     const { description, weight, type, containerId } = req.body;
+    
+    console.log('Received data:', { description, weight, type, containerId });  // ← Debug log
+    
     const pool = await poolPromise;
     
     const result = await pool.request()
       .input('description', description)
       .input('weight', weight)
       .input('type', type)
-      .input('containerId', containerId)
+      .input('containerId', containerId || null)
       .query(`
         INSERT INTO Cargo (Description, Weight, Type, ContainerId)
         OUTPUT INSERTED.*
@@ -47,6 +52,7 @@ export const createCargo = async (req: Request, res: Response): Promise<void> =>
     
     res.status(201).json({ success: true, data: result.recordset[0] });
   } catch (error) {
+    console.error('Error creating cargo:', error);  // ← Xem lỗi chi tiết
     res.status(500).json({ success: false, message: 'Server error' });
   }
 };
@@ -61,7 +67,7 @@ export const updateCargo = async (req: Request, res: Response): Promise<void> =>
       .input('description', description)
       .input('weight', weight)
       .input('type', type)
-      .input('containerId', containerId)
+      .input('containerId', containerId || null)
       .query(`
         UPDATE Cargo 
         SET Description = @description, Weight = @weight, Type = @type, ContainerId = @containerId, UpdatedAt = GETDATE()
@@ -75,9 +81,11 @@ export const updateCargo = async (req: Request, res: Response): Promise<void> =>
     }
     res.json({ success: true, data: result.recordset[0] });
   } catch (error) {
+    console.error('Error updating cargo:', error);
     res.status(500).json({ success: false, message: 'Server error' });
   }
 };
+
 
 export const deleteCargo = async (req: Request, res: Response): Promise<void> => {
   try {
@@ -92,6 +100,7 @@ export const deleteCargo = async (req: Request, res: Response): Promise<void> =>
     }
     res.json({ success: true, message: 'Cargo deleted' });
   } catch (error) {
+    console.error('Error deleting cargo:', error);
     res.status(500).json({ success: false, message: 'Server error' });
   }
 };
